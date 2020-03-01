@@ -31,5 +31,5 @@
 *.out
 *.app
 /.history
-/source_code/
+/source_data/
 /node_modules/
