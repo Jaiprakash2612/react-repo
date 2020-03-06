@@ -3,7 +3,9 @@ import './App.css';
 import {Switch,Route,Link} from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
+import SignInAndSignUp from './pages/signin-and-signup/signin-and-signup.component';
 import Header from './components/header/header.component';
+import {auth} from './firebase/firebase.utils';
 
 
 const Hatspage = (props) => {
@@ -33,22 +35,64 @@ return  (
   </div>
 )
 }
-function App() {
-  return ( 
-    <div>
-      <Header></Header>
-      <Switch>
-        {/* <Route  exact path='/' component={HomePage}/>
-        <Route exact path='/topics' component={TopicsLists}/>
-        <Route path='/topics/:topicId' component={Topic}/> */}
-        <Route  exact path='/' component={HomePage}/>
-        {/* <Route exact path='/shop/hats' component={Hatspage}/> */}
-        <Route exact path='/shop' component={ShopPage}/>
-        </Switch>
+// function App() {
+//   return ( 
+//     <div>
+//       <Header></Header>
+//       <Switch>
+//         {/* <Route  exact path='/' component={HomePage}/>
+//         <Route exact path='/topics' component={TopicsLists}/>
+//         <Route path='/topics/:topicId' component={Topic}/> */}
+//         <Route  exact path='/' component={HomePage}/>
+//         {/* <Route exact path='/shop/hats' component={Hatspage}/> */}
+//         <Route exact path='/shop' component={ShopPage}/>
+//         <Route exact path='/signin' component={SignInAndSignUp}/>
+//         </Switch>
      
-    </div>
+//     </div>
     
-  );
-}
+//   );
+// }
 
+class App extends React.Component {
+  constructor(){
+    super();
+    
+    this.state ={
+      currentUser: null
+    }
+  }
+  unsubscribeFromAuth = null;
+  
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged((user)=> {
+      this.setState({currentUser: user});
+      console.log(user)
+    });
+    
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
+  render(){
+    return ( 
+      <div>
+        <Header currentUser={this.state.currentUser}></Header>
+        <Switch>
+          {/* <Route  exact path='/' component={HomePage}/>
+          <Route exact path='/topics' component={TopicsLists}/>
+          <Route path='/topics/:topicId' component={Topic}/> */}
+          <Route  exact path='/' component={HomePage}/>
+          {/* <Route exact path='/shop/hats' component={Hatspage}/> */}
+          <Route exact path='/shop' component={ShopPage}/>
+          <Route exact path='/signin' component={SignInAndSignUp}/>
+          </Switch>
+       
+      </div>
+      
+    );
+  }
+}
 export default App;

@@ -33,3 +33,4 @@
 /.history
 /source_data/
 /node_modules/
+/src/firebase/constants.js
