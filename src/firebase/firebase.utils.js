@@ -6,14 +6,40 @@ import FIREBASE_CONFIG from './constants'
 
 const config = FIREBASE_CONFIG
 
-  firebase.initializeApp(config);
+export const createUserProfileDocument = async (userAuth, ...additionalData) => {
+  if(!userAuth) return ;
 
-  export const auth = firebase.auth();
-  export const firestore = firebase.firestore()
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapshot = await userRef.get();
 
-  const provider = new firebase.auth.GoogleAuthProvider();
+  if(!snapshot.exists){
+    const {displayName, email} = userAuth;
+    const createdAt = new Date();
+    try{
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
 
-  provider.setCustomParameters({prompt: 'select_account'});
-  export const signInWithGoogle = () => auth.signInWithPopup(provider);
+    }
+    catch(error){
+      console.log('error creatin user', error.message)
+    }
+  }
+  return userRef;
 
-  export default firebase;
+}
+
+firebase.initializeApp(config);
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore()
+
+const provider = new firebase.auth.GoogleAuthProvider();
+
+provider.setCustomParameters({prompt: 'select_account'});
+export const signInWithGoogle = () => auth.signInWithPopup(provider);
+
+export default firebase;
