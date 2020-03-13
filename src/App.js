@@ -7,7 +7,7 @@ import SignInAndSignUp from './pages/signin-and-signup/signin-and-signup.compone
 import Header from './components/header/header.component';
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
 import { connect } from 'react-redux';
-import setCurrentUser from './redux/user/user.actions';
+import setCurentUser from './redux/user/user.actions';
 
 const Hatspage = (props) => {
   console.log(props);
@@ -66,7 +66,7 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
   
   componentDidMount() {
-    const {setCurrentUser} = this.props;
+    const {setCurentUser} = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth)=> {
       if(userAuth){
         const userRef = await createUserProfileDocument(userAuth);
@@ -78,7 +78,7 @@ class App extends React.Component {
           //     ...snapShot.data()
           //   }
           // }, () => console.log("user state change",this.state.currentUser));
-          setCurrentUser({
+          setCurentUser({
                 id: snapShot.id,
                 ...snapShot.data()
               })
@@ -86,7 +86,7 @@ class App extends React.Component {
 
 
       }
-      setCurrentUser(userAuth);
+      setCurentUser(userAuth);
     });
     
   }
@@ -115,11 +115,8 @@ class App extends React.Component {
     );
   }
 }
-const mapStateToProps = ({user}) => ({
-  currentUser : user.currentUser
-})
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser : user => dispatch(setCurrentUser(user))
+  setCurentUser : user => dispatch(setCurentUser(user))
 })
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default connect(null,mapDispatchToProps)(App);
