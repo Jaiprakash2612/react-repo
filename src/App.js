@@ -116,7 +116,11 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  currentUser : state.user.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
   setCurentUser : user => dispatch(setCurentUser(user))
 })
-export default connect(null,mapDispatchToProps)(App);
+export default connect(mapStateToProps,mapDispatchToProps)(App);
